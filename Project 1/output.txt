@@ -1,0 +1,9 @@
+path_to_goal: ["left", "up", "up", "left"]
+cost_of_path: 4
+nodes_expanded: 23
+fringe_size: 17
+max_fringe_size: 18
+cost_of_path: 4
+search_depth: 4
+max_search_depth: 4
+time_in_seconds: 0.00361281031798

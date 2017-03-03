@@ -1,0 +1,25 @@
+# Graph search algorithm
+
+	function graphSearch(initialState, goalTest):
+
+		# frontier is like a place where the items to be explored next are kept
+		initialize frontier with initialState 
+
+		# The explored set will contain all the nodes which have been explored
+		explored = Set.new() 
+
+		# loop till frontier is empty
+		while not frontier.isEmpty():
+			state = frontier.remove()
+			explored.add(State)
+
+			if goalTest(state):
+				return success(state)
+				# if goalTest is false, then load all neighbours of state and try again
+				for neighbour in state.neighbors(): 
+					if neighbour not in frontier or explored:
+						frontier.add(neighbour)
+
+		return Failure # looped through all the items and none of them passed the goal test
+
+		Note: Due to the presence of the explored set, we do not run into infinite loops while doing a search

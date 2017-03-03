@@ -1,0 +1,19 @@
+# Tree search algorithm
+
+	function treeSearch(initialState, goalTest):
+
+		initialize frontier with initialState # frontier is like a place where the items to be explored next are kept
+
+		# loop till frontier is empty
+		while not frontier.isEmpty():
+			state = frontier.remove()
+
+			if goalTest(state):
+				return success(state)
+				# if goalTest is false, then load all neighbours of state and try again
+				for neighbour in state.neighbors(): 
+					frontier.add(neighbour)
+
+		return Failure # looped through all the items and none of them passed the goal test
+
+		Note: We can run into an infinite loop since neighbours can contain items we have already explored.
