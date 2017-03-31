@@ -1,0 +1,14 @@
+To implement the A* search algorithm:
+
+Each state needs to have a cost function associated with it.
+
+The cost function = total of (cost to reach the state from root) + (Manhattan distance of node to goal)
+
+Using a heap we can pop states with lowest cost first
+
+When a neighbour is generated from a state, its cost also has to be generated.
+
+Suppose we have a state A in the frontier with some associated cost function x. Suppose while visiting the neighbours of some other state B, we find that A is also a neighbour of B.
+If the cost of visiting A through B (y) is less than the previous path cost (x), we update the cost function of A with y (<x).
+
+We also need to keep track of the order of the visit corresponding to the cost function.

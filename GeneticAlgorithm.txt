@@ -1,0 +1,23 @@
+""" local search algorithm which crosses over parent nodes to make child nodes"""
+
+Video link: https://courses.edx.org/courses/course-v1:ColumbiaX+CSMM.101x+1T2017/courseware/de0319e8ff964eb5bc9163a610387086/c2cf67a610204f48b0d2dc08e5e22857/
+
+
+function GeneticAlgorithm(population,fintess_function)
+
+	repeat
+			initialize new-population with 0
+
+			for i=1 to size(population) do
+
+				x=random(population,fitness-function) # x and y are parents
+				y=random(population,fitness-function)
+				child = cross-over(x,y)
+				mutate(child) with a small random probability
+				add child to new population
+
+			population = new population
+
+	until some individual is fit enough or enough time has elapsed
+
+	return the best individual in population w.r.t fitness-function

@@ -1,0 +1,15 @@
+""" Hill climbing local search algorithm"""
+
+function HillClimbing(initialState):
+	"""return State that is a local maximum"""
+
+	initialize currentState with initialState
+
+	""" loops till the current state is greater than or equal to its nieghobour in value """
+	loop do
+			neighbour = a highest-valued successor of currentState
+
+			if neighbour.value<=current.value:
+				return current.state
+
+			current=neighbour
