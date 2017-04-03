@@ -1,3 +1,17 @@
+Things to do in the implementation:
+
+At the moment, i am using a priority queue. I should use a heap, which is actually a list sorted with minimum element in the beginning. That way, i can access elements in the heap when i need to change their cost.
+
+I can use this link to solve problems related to modifying cost functions and getting nodes having same cost (look at the implementation notes):
+https://docs.python.org/2/library/heapq.html
+
+Have a heap where each element has a cost, a count and the state list (similar to the example in the link above). Also, see if making a state class helps (which is for the current state).
+I already have  a stateAstar class but it actually stores info of all the neighbours instead of the current state. 
+
+Also, it be might be helpful to make dictionaries of state depths
+
+
+
 To implement the A* search algorithm:
 
 Each state needs to have a cost function associated with it.

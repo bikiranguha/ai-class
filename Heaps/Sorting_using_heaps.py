@@ -3,7 +3,7 @@ from heapq import *
 unordered_list=[0,5,4,2,6,3,7,8]
 
 ordered_list=[]
-temp=[] % buffer to store the sorted values
+temp=[] # buffer to store the sorted values
 for value in unordered_list:
     heappush(temp,value)
 
