@@ -135,22 +135,29 @@ def add_state(frontier,state, cost,stateStr,depth):
     entry_finder[stateStr] = entry
     heappush(frontier, entry)
 
-def update_state(frontier,state,cost,count,stateStr,depth):
+#def update_state(frontier,state,cost,count,stateStr,depth):
+def update_state(frontier,cost,stateStr,depth):
 	""" used to update the cost of states """
-	previousCost = entry_finder[stateStr][0]
-	entry=[]
+	previousEntry = entry_finder[stateStr]
+	getEntryIndex = frontier.index(previousEntry)
+	previousCost = frontier[getEntryIndex][0]
 	if cost<previousCost:
-		remove_state(stateStr)
+		newEntry = previousEntry[:]
+		newEntry[0]=cost
+		newEntry[-1]=depth
+		entry_finder[stateStr]=newEntry
+		frontier[getEntryIndex]=newEntry
+#		remove_state(stateStr)
 #		count = next(counter)
-		entry = [cost, count, state,stateStr,depth]
-		entry_finder[stateStr] = entry
-		heappush(frontier, entry)
+#		entry = [cost, count, state,stateStr,depth]
+#		entry_finder[stateStr] = entry
+#		heappush(frontier, entry)
 
 
-def remove_state(stateStr):
-    """Mark an existing state as REMOVED.  """
-    entry = entry_finder.pop(stateStr)
-#    entry[-1] = REMOVED
+# def remove_state(stateStr):
+#     """Mark an existing state as REMOVED.  """
+#     entry = entry_finder.pop(stateStr)
+#     entry[-1] = REMOVED
 
 def update_parent(frontier,neighbourStateStr,neighbourCost, currentStateStr,currentState,neighbourIndex,ParentDict,ActionDict):
 	""" uodates the parent and action dictionaries if the new cost of neighbour in frontier less than previous one"""
@@ -187,7 +194,7 @@ def Astar(initialState):
 		currentStateList = currentStateInfo[2] # currentStateInfo[1] is the count of the state
 		currentStateStr = currentStateInfo[3]
 		currentStateDepth = currentStateInfo[4]
-		print explored
+#		print explored
 		frontierSet.remove(currentStateStr) # used for searching for states in the else loop below
 		explored.add(currentStateStr)
 
@@ -227,10 +234,11 @@ def Astar(initialState):
 							neighbourIndex=currentState.nbr.List.index(neighbour)
 							neighbourCost=currentState.nbr.cost[neighbourIndex]
 							update_parent(frontier,neighbourStr,neighbourCost, currentStateStr,currentState,neighbourIndex,ParentDict,ActionDict)
-							update_state(frontier,neighbour,neighbourCost,currentStateCount,neighbourStr,neighbourDepth)
+#							update_state(frontier,neighbour,neighbourCost,currentStateCount,neighbourStr,neighbourDepth)
+							update_state(frontier,neighbourCost,neighbourStr,neighbourDepth)
 
 
-x=Astar([2,4,6,3,1,5,8,0,7])
+x=Astar([1,2,5,3,4,0,6,7,8])
 
 
 						 

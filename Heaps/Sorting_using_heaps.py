@@ -9,7 +9,7 @@ for value in unordered_list:
 
 
 for i in range(len(temp)):
-    ordered_list.append(heappop(temp)) % heappop pops the smallest element first
+    ordered_list.append(heappop(temp)) # heappop pops the smallest element first
 
 print ordered_list
     

@@ -1,6 +1,20 @@
 Things to do in the implementation:
 
-At the moment, i am using a priority queue. I should use a heap, which is actually a list sorted with minimum element in the beginning. That way, i can access elements in the heap when i need to change their cost.
+Clean up the code for Astar and then commit
+
+Merge Astar into driver.py, clean up and push
+
+Modify BFS to make it faster
+
+
+
+
+
+
+
+I need to look at the add_state() function more carefully, specially about the dictionary which points to states added to the frontier. Maybe change it so that it only adds states. 
+Have a separate function for updating the cost of the state when its the shortest path. Here we can use the dictionary to locate the particular state and change its cost. This is used when the neighbour is in frontier and when its cost is less than before.
+
 
 I can use this link to solve problems related to modifying cost functions and getting nodes having same cost (look at the implementation notes):
 https://docs.python.org/2/library/heapq.html
