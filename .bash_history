@@ -15,3 +15,10 @@ git status
 git commit
 git push origin master
 git log
+pwd
+git add .
+git status
+git commit
+git commit
+git push
+git push origin master

@@ -12,7 +12,11 @@
 ~h
 # Command Line History (newest to oldest):
 :wq
-|2,0,1491179820,,"wq"
+|2,0,1491456100,,"wq"
+:q!
+|2,0,1491456036,,"q!"
+:q
+|2,0,1491456031,,"q"
 
 # Search String History (newest to oldest):
 
@@ -23,22 +27,60 @@
 # Debug Line History (newest to oldest):
 
 # Registers:
+""1	LINE	0
+	#	new file:   Project 1/temp.py
+|3,1,1,1,1,0,1491456026,"#	new file:   Project 1/temp.py"
+"2	LINE	0
+	#
+|3,0,2,1,1,0,1491456025,"#"
+"-	CHAR	0
+	n
+|3,0,36,0,1,0,1491456012,"n"
 
 # File marks:
-'0  3  29  ~/.git/COMMIT_EDITMSG
-|4,48,3,29,1491179820,"~/.git/COMMIT_EDITMSG"
+'0  2  67  ~/.git/COMMIT_EDITMSG
+|4,48,2,67,1491456100,"~/.git/COMMIT_EDITMSG"
+'1  18  0  ~/.git/COMMIT_EDITMSG
+|4,49,18,0,1491456036,"~/.git/COMMIT_EDITMSG"
+'2  16  0  ~/.git/COMMIT_EDITMSG
+|4,50,16,0,1491456036,"~/.git/COMMIT_EDITMSG"
+'3  5  29  ~/.git/COMMIT_EDITMSG
+|4,51,5,29,1491179820,"~/.git/COMMIT_EDITMSG"
+'4  5  29  ~/.git/COMMIT_EDITMSG
+|4,52,5,29,1491179820,"~/.git/COMMIT_EDITMSG"
+'5  3  29  ~/.git/COMMIT_EDITMSG
+|4,53,3,29,1491179820,"~/.git/COMMIT_EDITMSG"
+'6  3  29  ~/.git/COMMIT_EDITMSG
+|4,54,3,29,1491179820,"~/.git/COMMIT_EDITMSG"
 
 # Jumplist (newest first):
+-'  2  67  ~/.git/COMMIT_EDITMSG
+|4,39,2,67,1491456100,"~/.git/COMMIT_EDITMSG"
+-'  18  0  ~/.git/COMMIT_EDITMSG
+|4,39,18,0,1491456041,"~/.git/COMMIT_EDITMSG"
+-'  16  0  ~/.git/COMMIT_EDITMSG
+|4,39,16,0,1491456036,"~/.git/COMMIT_EDITMSG"
+-'  5  29  ~/.git/COMMIT_EDITMSG
+|4,39,5,29,1491456010,"~/.git/COMMIT_EDITMSG"
+-'  3  29  ~/.git/COMMIT_EDITMSG
+|4,39,3,29,1491456010,"~/.git/COMMIT_EDITMSG"
 -'  3  29  ~/.git/COMMIT_EDITMSG
 |4,39,3,29,1491179820,"~/.git/COMMIT_EDITMSG"
+-'  1  0  ~/.git/COMMIT_EDITMSG
+|4,39,1,0,1491179753,"~/.git/COMMIT_EDITMSG"
+-'  1  0  ~/.git/COMMIT_EDITMSG
+|4,39,1,0,1491179753,"~/.git/COMMIT_EDITMSG"
 -'  1  0  ~/.git/COMMIT_EDITMSG
 |4,39,1,0,1491179753,"~/.git/COMMIT_EDITMSG"
 
 # History of marks within files (newest to oldest):
 
 > ~/.git/COMMIT_EDITMSG
-	*	1491179819	0
-	"	3	29
-	^	3	30
-	.	3	29
-	+	3	29
+	*	1491456099	0
+	"	2	67
+	^	2	68
+	.	2	67
+	+	5	29
+	+	19	0
+	+	1	72
+	+	2	67

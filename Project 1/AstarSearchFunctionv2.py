@@ -5,7 +5,8 @@ import json
 import os
 from copy import copy
 from heapq import *  # since we are using heaps
-import itertools  # used for thec count
+import itertools  # used for the count
+start_time = time.clock()
 
 """ returns the co-ordinate of any number in the 3*3 puzzle """
 def getManhattanCoord(puzzle,i):
@@ -66,7 +67,7 @@ def makeNeighboursAstar(parent,parentDepth): # The depth is the cost to get from
 
 
 	if zIndex%3 != 2: # 'right'
-		child = parent[:]
+		child = parent[:] # use this to clone a list, not child = parent (which changes parent every time child changes)
 		y = parent[zIndex+1]
 		child[zIndex]=y
 		child[zIndex+1]=x
@@ -89,7 +90,7 @@ def makeNeighboursAstar(parent,parentDepth): # The depth is the cost to get from
 		nbr.cost.append(goalCost)
 
 
-	if zIndex <6: # list for down
+	if zIndex <6: # 'down'
 		child = parent[:]
 		y = parent[zIndex+3]
 		child[zIndex] = y
@@ -100,8 +101,8 @@ def makeNeighboursAstar(parent,parentDepth): # The depth is the cost to get from
 		nbr.depth.append(neighbourDepth)
 		nbr.cost.append(goalCost)
 
-	if zIndex > 2: # list for 'up'
-		child = parent[:] # use this to clone a list, not child = parent (which changes parent every time child changes)
+	if zIndex > 2: # 'up'
+		child = parent[:] 
 		y = parent[zIndex-3]
 		child[zIndex] = y
 		child[zIndex-3] = x
@@ -111,7 +112,6 @@ def makeNeighboursAstar(parent,parentDepth): # The depth is the cost to get from
 		nbr.depth.append(neighbourDepth)
 		nbr.cost.append(goalCost)
 		
-
 	return nbr
 
 class stateAstar(list):
@@ -120,44 +120,35 @@ class stateAstar(list):
     	self.nbr = makeNeighboursAstar(currentList,currentDepth)
 
 entry_finder = {}               # dictionary pointing to an entry in the frontier
-REMOVED = '<removed-task>'      # placeholder for a removed task
 counter = itertools.count()     # unique sequence count
 
 
 def add_state(frontier,state, cost,stateStr,depth):
-    """Add a new state"""
-    # if stateStr in entry_finder:
-    # 	previousCost = entry_finder[stateStr][0]
-    # 	if cost < previousCost:
-    # 		remove_state(stateStr)
+    """Add a new state to the frontier heap"""
+
     count = next(counter)
     entry = [cost, count, state,stateStr,depth]
     entry_finder[stateStr] = entry
     heappush(frontier, entry)
 
-#def update_state(frontier,state,cost,count,stateStr,depth):
+
 def update_state(frontier,cost,stateStr,depth):
-	""" used to update the cost of states """
+	""" used to update the cost of the state """
 	previousEntry = entry_finder[stateStr]
 	getEntryIndex = frontier.index(previousEntry)
-	previousCost = frontier[getEntryIndex][0]
+	previousCost = frontier[getEntryIndex][0] # get previously stored cost of the state
+
+	""" if cost < previousCost, then replace the previous cost with the new one in frontier for the state """
 	if cost<previousCost:
-		newEntry = previousEntry[:]
+		newEntry = previousEntry[:] 
 		newEntry[0]=cost
 		newEntry[-1]=depth
 		entry_finder[stateStr]=newEntry
 		frontier[getEntryIndex]=newEntry
-#		remove_state(stateStr)
-#		count = next(counter)
-#		entry = [cost, count, state,stateStr,depth]
-#		entry_finder[stateStr] = entry
-#		heappush(frontier, entry)
 
 
-# def remove_state(stateStr):
-#     """Mark an existing state as REMOVED.  """
-#     entry = entry_finder.pop(stateStr)
-#     entry[-1] = REMOVED
+
+
 
 def update_parent(frontier,neighbourStateStr,neighbourCost, currentStateStr,currentState,neighbourIndex,ParentDict,ActionDict):
 	""" uodates the parent and action dictionaries if the new cost of neighbour in frontier less than previous one"""
@@ -168,9 +159,9 @@ def update_parent(frontier,neighbourStateStr,neighbourCost, currentStateStr,curr
 
 
 
-
+""" main function for Astar """
 def Astar(initialState):
-	frontier = [] # frontier is a heap which is actually a list which is sorted
+	frontier = [] # frontier is a heap (a list which is sorted in ascending order)
 	frontierSet = set()
 	initialStateStr = str(initialState)
 	frontierSet.add(initialStateStr)
@@ -183,23 +174,36 @@ def Astar(initialState):
 
 	initialCost = 0 + ManhattanDistanceCalculator(initialState)
 	add_state(frontier,initialState,initialCost,initialStateStr,initialDepth)
-#	print frontier
+	""" variables needed to be output at the end"""
+	# nodes_expanded = 0
+	max_fringe_size = 0
+	# search_depth = 0
+	max_search_depth = 0
+
+
 
 
 	while len(frontier)>0:
-		currentStateInfo = heappop(frontier) # Should be able to handle ties in cost with the count parameter, which is unique for every state
-#		print currentStateInfo
+		currentStateInfo = heappop(frontier) 
+
+		if len(frontier)>max_fringe_size:
+			max_fringe_size=len(frontier)
+
 		currentStateCost=currentStateInfo[0]
 		currentStateCount=currentStateInfo[1]
 		currentStateList = currentStateInfo[2] # currentStateInfo[1] is the count of the state
 		currentStateStr = currentStateInfo[3]
 		currentStateDepth = currentStateInfo[4]
-#		print explored
+
+		if max_search_depth<currentStateDepth:
+			max_search_depth=currentStateDepth
+
 		frontierSet.remove(currentStateStr) # used for searching for states in the else loop below
+		nodes_expanded=len(explored)
 		explored.add(currentStateStr)
 
 
-		currentState = stateAstar(currentStateList,currentStateDepth) # This class actually stores all the neighbour info of the currentState, consider renaming this later
+		currentState = stateAstar(currentStateList,currentStateDepth) # This class actually stores all the neighbour info of the currentState
 
 		if currentStateList == [0,1,2,3,4,5,6,7,8]:
 			getpath=[]
@@ -209,9 +213,36 @@ def Astar(initialState):
 				currentStateStr=ParentDict[currentStateStr]
 
 			getpath.reverse()
-			print getpath
+#			print getpath
+			fringe_size = len(frontier)
+			cost_of_path=len(getpath)
+			search_depth = cost_of_path
+			time_in_seconds = time.clock() - start_time
 
-#			print 'Yay, found the goal!'
+			tf = 'output.txt'
+			f=open(tf,'w')
+			line1 = 'path_to_goal: '
+			f.write('line1')
+			json.dump(getpath,f)
+			f.write('\n')
+			f.write('cost_of_path: '+str(cost_of_path)+'\n')
+			f.write('nodes_expanded: '+str(nodes_expanded)+'\n')
+			f.write('fringe_size: '+str(fringe_size)+'\n')
+			f.write('max_fringe_size: '+str(max_fringe_size)+'\n')
+			f.write('search_depth: '+str(search_depth)+'\n')
+			f.write('max_search_depth: '+str(max_search_depth)+'\n')
+			f.write('time_in_seconds: '+str(time_in_seconds)+'\n')
+#			f.write('max_ram_usage: '+str(max_ram_usage)+'\n') # uncomment in ubuntu
+			f.close()
+
+
+
+
+
+
+
+
+
 			break
 
 
@@ -234,11 +265,10 @@ def Astar(initialState):
 							neighbourIndex=currentState.nbr.List.index(neighbour)
 							neighbourCost=currentState.nbr.cost[neighbourIndex]
 							update_parent(frontier,neighbourStr,neighbourCost, currentStateStr,currentState,neighbourIndex,ParentDict,ActionDict)
-#							update_state(frontier,neighbour,neighbourCost,currentStateCount,neighbourStr,neighbourDepth)
 							update_state(frontier,neighbourCost,neighbourStr,neighbourDepth)
 
 
-x=Astar([1,2,5,3,4,0,6,7,8])
+x=Astar([4,7,8,1,6,3,5,0,2])
 
 
 						 
