@@ -6,7 +6,14 @@ from copy import copy
 from heapq import *  # since we are using heaps
 #import resource # uncomment when running in linux
 import itertools  # used for the count in Astar
+import sys # used for reading arguments passed directly through command line
 start_time = time.clock()
+
+
+
+
+
+
 
 
 
@@ -612,5 +619,25 @@ def Astar(initialState):
 #x=Astar([1,2,5,3,4,0,6,7,8])
 
 
+""" Reading arguments from command window """
+
+
+# sys.argv[0] is the name of the script. The latter arguments: sys.argv[1], sys.argv[2] and so on are the arguments passed
+method = sys.argv[1]
+puzzleStr = sys.argv[2]
+puzzleListStr = puzzleStr.split(',')
+
+puzzleList = []
+
+for i in range(len(puzzleListStr)):
+	puzzleList.append(int(puzzleListStr[i]))
+
+
+if method == "BFS":
+	BFS(puzzleList)
+elif method == "DFS":
+	DFS(puzzleList)
+elif method == "Astar":
+	Astar(puzzleList)
 
 
