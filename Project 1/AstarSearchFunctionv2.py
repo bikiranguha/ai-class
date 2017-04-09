@@ -1,5 +1,4 @@
 from Queue import Queue
-from Queue import PriorityQueue
 import time
 import json
 import os
