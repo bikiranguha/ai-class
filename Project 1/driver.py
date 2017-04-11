@@ -26,34 +26,33 @@ start_time = time.clock()
 
 """ BFS """
 
-class neighbours(object):
+""" BFS """
+
+class neighboursBFS(object):
 
 	def __init__(self):
 		self.List = []  # Stores a list of neighbours of the current state
-		self.ID = []  # ID stores the direction from the root node of the current state
+		self.action = []  # stores the action(direction) from parent to child node
+		self.depth = []	# stores the depth of the corresponding node
 
 
-def makeNeighboursBFS(parent,parentID):
+def makeNeighboursBFS(parent,parentDepth):
 	zIndex = parent.index(0)
 
 	x = parent[zIndex]
 	
-	nbr = neighbours()
+	nbr = neighboursBFS()
 
 
 
 	if zIndex > 2: # list for 'up'
-		child = list(parent) # use this to clone a list, not child = parent (which changes parent every time child changes)
+		child = parent[:] # use this to clone a list, not child = parent (which changes parent every time child changes)
 		y = parent[zIndex-3]
 		child[zIndex] = y
 		child[zIndex-3] = x
-		if parentID == 'root':
-			childID = []
-		else:
-			childID = list(parentID)
-		childID.append('Up')
 		nbr.List.append(child)
-		nbr.ID.append(childID)
+		nbr.action.append('Up')
+		nbr.depth.append(parentDepth+1)
 
 
 
@@ -63,13 +62,9 @@ def makeNeighboursBFS(parent,parentID):
 		y = parent[zIndex+3]
 		child[zIndex] = y
 		child[zIndex+3] = x
-		if parentID == 'root':
-			childID = []
-		else:
-			childID = list(parentID)
-		childID.append('Down')
 		nbr.List.append(child)
-		nbr.ID.append(childID)
+		nbr.action.append('Down')
+		nbr.depth.append(parentDepth+1)
 
 
 	if zIndex%3 != 0: # 'left'
@@ -77,13 +72,9 @@ def makeNeighboursBFS(parent,parentID):
 		y = parent[zIndex-1]
 		child[zIndex]=y
 		child[zIndex-1]=x
-		if parentID == 'root':
-			childID = []
-		else:
-			childID = list(parentID)
-		childID.append('Left')
 		nbr.List.append(child)
-		nbr.ID.append(childID)
+		nbr.action.append('Left')
+		nbr.depth.append(parentDepth+1)
 
 
 	if zIndex%3 != 2: # 'right'
@@ -91,13 +82,9 @@ def makeNeighboursBFS(parent,parentID):
 		y = parent[zIndex+1]
 		child[zIndex]=y
 		child[zIndex+1]=x
-		if parentID == 'root':
-			childID = []
-		else:
-			childID = list(parentID)
-		childID.append('Right')
 		nbr.List.append(child)
-		nbr.ID.append(childID)
+		nbr.action.append('Right')
+		nbr.depth.append(parentDepth+1)
 
 	return nbr
 
@@ -106,27 +93,32 @@ def makeNeighboursBFS(parent,parentID):
 
 class stateBFS(list):
 
-    def __init__(self, parentState,parentID):
-    	self.parentState = parentState
-    	self.nbr = makeNeighboursBFS(parentState,parentID)
+    def __init__(self, currentList,currentDepth):
+    	self.nbr = makeNeighboursBFS(currentList,currentDepth)
 
 def BFS(initialState):
 
 	frontier = Queue(maxsize=0)
-	IDList = Queue(maxsize=0)
+	frontierSet = set()
+	initialStateStr = str(initialState)
+	frontierSet.add(initialStateStr)
+	ParentDict ={} 	# Dictionary to store parent state
+	ActionDict = {}	# Dictionary to store action taken to get to child from parent
+	ParentDict[initialStateStr] = 0 # Intiial state has parent 0
+	ActionDict[initialStateStr] = 0 # Initial state has action 0
 	frontier.put(initialState)
-	IDList.put('root')
-	explored=[]
-	exploredID = []
+	explored=set()
+	depthList = [0] # stores the depth of the corresponding elements in frontier
+
 
 	""" stuff i need to output """
 	path_to_goal = []
 	nodes_expanded = []
 	fringe_size = []
 	frontier_size_list = []
-	max_fringe_size = []
+	max_fringe_size = 0
 	search_depth = []
-	max_search_depth = []
+	max_search_depth = 0
 	depth_list = []
 
 
@@ -134,36 +126,37 @@ def BFS(initialState):
 
 	while not frontier.empty():
 		frontier_size = frontier.qsize()
-		frontier_size_list.append(frontier_size)
+		if frontier_size>max_fringe_size:
+			max_fringe_size = frontier_size
 		currentList =  frontier.get()
-		frontier.task_done()
-		currentID = IDList.get()
-		IDList.task_done()
-#		print currentList,currentID
-		currentState = stateBFS(currentList,currentID)
-		nodes_expanded = len(explored)
-		explored.append(currentList)
-		exploredID.append(currentID)
-#		print exploredID
+		currentListStr = str(currentList)
+		frontierSet.remove(currentListStr)
+		currentDepth = depthList.pop()
+		currentState = stateBFS(currentList,currentDepth)
+		if max_search_depth<currentDepth:
+			max_search_depth =currentDepth
+		nodes_expanded=len(explored)
+		explored.add(currentListStr)
+
 
 
 		if currentList == [0,1,2,3,4,5,6,7,8]:
-			path_to_goal = list(currentID)
-			fringe_size = frontier.qsize()
-			max_fringe_size = max(frontier_size_list)
-			cost_of_path = len(path_to_goal)
-			search_depth = len(path_to_goal)
-			for i in exploredID:
-				element_depth = len(i)
-				depth_list.append(element_depth)
-			max_search_depth = max(depth_list)
+			getpath=[]
+			while currentListStr!=initialStateStr:
+				getpath.append(ActionDict[currentListStr])
+				currentListStr=ParentDict[currentListStr]
+			getpath.reverse()
+			fringe_size=frontier.qsize()
+			# print"path_to_goal: ",getpath
+			cost_of_path=len(getpath)
 			time_in_seconds = time.clock() - start_time
+			search_depth=len(getpath)			
 #			max_ram_usage = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss/1000; # uncomment in ubuntu
 			tf = 'output.txt'
 			f = open(tf,'w')
 			line1 = 'path_to_goal: '
 			f.write(line1)
-			json.dump(path_to_goal,f) # used to write the list 'path_to_goal'
+			json.dump(getpath,f) # used to write the list 'path_to_goal'
 			f.write('\n')
 			f.write('cost_of_path: '+str(cost_of_path)+'\n')
 			f.write('nodes_expanded: '+str(nodes_expanded)+'\n')
@@ -180,11 +173,15 @@ def BFS(initialState):
 		else:
 			if currentState.nbr.List:  # true if currentState.nbr.List is not empty
 				for neighbour in currentState.nbr.List:
-					if neighbour not in frontier.queue:
-						if neighbour not in explored:  # nested if statements used because 'or'ing them together was not working as expected
+					neighbourStr = str(neighbour)
+					if neighbourStr not in frontierSet:
+						if neighbourStr not in explored:  # nested if statements used because 'or'ing them together was not working as expected
 							neighbourIndex = currentState.nbr.List.index(neighbour) # since each element of ID and list share the index
+							ParentDict[neighbourStr] = currentListStr
+							ActionDict[neighbourStr] = currentState.nbr.action[neighbourIndex]
 							frontier.put(neighbour)
-							IDList.put(currentState.nbr.ID[neighbourIndex])
+							frontierSet.add(neighbourStr)
+							depthList.append(currentState.nbr.depth[neighbourIndex])
 
 
 #x = BFS([1,2,5,3,4,0,6,7,8])
@@ -290,9 +287,8 @@ def DFS(initialState): # Note that the search path will vary depend on the order
 		currentState = stateDFS(currentList,currentDepth)
 		if max_search_depth<currentDepth:
 			max_search_depth =currentDepth
-		currentStr=str(currentList)
 		nodes_expanded=len(explored)
-		explored.add(currentStr)
+		explored.add(currentListStr)
 #		os.system("pause")
 		if currentList == [0,1,2,3,4,5,6,7,8]:
 			getpath =[]
